@@ -6,8 +6,8 @@ import json
 import os
 import subprocess
 
-from ti_server.common.log import logger as log
-from ti_server.common.path_constant import PathConstant
+from log import logger as log
+from path_constant import PathConstant
 
 
 class BaseFun(object):

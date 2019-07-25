@@ -10,12 +10,12 @@ import threading
 import types
 import traceback
 
+from common.log import logger as log
 from eventlet import wsgi
 from eventlet.green import socket
 from eventlet.wsgi import HttpProtocol
+from rest_parser import RestReqApp
 from SocketServer import BaseRequestHandler
-from ti_server.common.log import logger as log
-from ti_server.rest_parser import RestReqApp
 from webob import Response
 
 

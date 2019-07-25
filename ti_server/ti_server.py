@@ -6,9 +6,9 @@ import sys
 import time
 import traceback
 
-from ti_server.common.log import logger as log
-from ti_server.common.path_constant import PathConstant
-from ti_server.ti_rest_server import TiRestServer
+from common.log import logger as log
+from common.path_constant import PathConstant
+from ti_rest_server import TiRestServer
 
 
 class TiServer(object):

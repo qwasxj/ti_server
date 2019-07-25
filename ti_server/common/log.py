@@ -6,7 +6,7 @@ import os
 import traceback
 
 from logging.handlers import RotatingFileHandler
-from ti_server.common.path_constant import PathConstant
+from path_constant import PathConstant
 
 
 class Logger(object):
