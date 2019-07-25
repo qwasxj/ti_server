@@ -1,0 +1,2 @@
+#!/bin/bash
+python /home/fsp/tidb_auto_test/bin/ti_server_control.py control "$@"
