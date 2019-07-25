@@ -7,7 +7,7 @@ import os
 import subprocess
 import traceback
 
-from bin.log import logger as log
+from log import logger as log
 from configparser import ConfigParser
 from configparser import NoOptionError
 from configparser import NoSectionError
