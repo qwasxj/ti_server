@@ -30,6 +30,14 @@ class BaseFun(object):
         return pro.pid, code, output
 
     @staticmethod
+    def exe_cmd_demon(cmd):
+        subprocess.Popen(
+            args=cmd, shell=True, stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE, cwd=PathConstant.SUBPROCESS_ROOT,
+            preexec_fn=BaseFun.__pre_func, close_fds=True
+        )
+
+    @staticmethod
     def com_read_file_with_json(file_name, mode="r", **kwargs):
         if not os.path.exists(file_name):
             log.warning('File <%s> not exist.' % file_name)

@@ -15,6 +15,7 @@ class PathConstant(object):
     TI_ROOT = os.path.dirname(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     )
+    TI_CONFIG = os.path.join(TI_ROOT, "config", "ti_server.ini")
     # root path of tiDB test framework
     TI_SERVER_ROOT = os.path.join(TI_ROOT, "ti_server")
     # path of url mapping file

@@ -64,7 +64,6 @@ class RestReqApp(object):
     @staticmethod
     def import_object(class_path):
         module_str, sep, class_name = class_path.rpartition(".")
-        log.info("xxjj: %s %s %s" % (module_str, sep, class_name))
         try:
             __import__(module_str)
             return getattr(sys.modules[module_str], class_name)()

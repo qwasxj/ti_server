@@ -7,10 +7,10 @@ import os
 import subprocess
 import traceback
 
-from log import logger as log
 from configparser import ConfigParser
 from configparser import NoOptionError
 from configparser import NoSectionError
+from ti_server.log import logger as log
 
 
 class TiServerControl(object):

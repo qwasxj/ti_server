@@ -1,10 +1,10 @@
 [
     {
-        "provider": "url_request.test_request.FiAutoTest",
+        "provider": "url_request.auto_test_request.FiAutoTest",
         "uris": [
             {
-                "uri": "^/fi/v1/auto_test$",
-                "method": "fi_auto_test_request"
+                "uri": "^/ti/v1/auto_test$",
+                "method": "ti_auto_test_request"
             }
         ]
     }
