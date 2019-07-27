@@ -12,7 +12,7 @@ from webob import Request
 
 class FiAutoTest(object):
 
-    FAIL = "Request to run tempest failed with %s"
+    FAIL = "Request to run tempest failed with"
 
     def __init__(self):
         pass
@@ -24,8 +24,8 @@ class FiAutoTest(object):
             # request body invalid
             try:
                 request_body = json.loads(req.body)
-                workspace = request_body.get("workspace")
-                match_string = request_body.get("match_string")
+                workspace = request_body["workspace"]
+                match_string = request_body["match_string"]
             except Exception as e:
                 message = "%s request body invalid. body: %s" % \
                           (self.FAIL, req.body)
@@ -40,7 +40,7 @@ class FiAutoTest(object):
                           (message, e, traceback.format_exc()))
                 return HttpConstant.CODE500, {"code": 500, "message": message}
             message = "start to run tiDB auto test instance: %s, log " \
-                      "dir path: %s" % workspace
+                      "dir path: %s" % (match_string, workspace)
             log.info(message)
             return HttpConstant.CODE200, {"code": 200, "message": message}
         else:

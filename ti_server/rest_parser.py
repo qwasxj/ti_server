@@ -6,9 +6,10 @@ import re
 import sys
 import traceback
 
-from common.log import logger as log
-from common.path_constant import PathConstant
-from common.ti_base_func import BaseFun
+from ti_server.common.log import logger as log
+from ti_server.common.path_constant import PathConstant
+from ti_server.common.ti_base_func import BaseFun
+
 from webob import Request
 from webob import Response
 
@@ -64,8 +65,10 @@ class RestReqApp(object):
     @staticmethod
     def import_object(class_path):
         module_str, sep, class_name = class_path.rpartition(".")
+        log.info("rest_parser, module_str: %s" % module_str)
         try:
             __import__(module_str)
+            log.info("rest_parser, module_str: %s" % module_str)
             return getattr(sys.modules[module_str], class_name)()
         except (ValueError, AttributeError) as e:
             log.error("failed to import class: %s in file: %s, "

@@ -7,9 +7,9 @@ import sys
 import traceback
 import utils
 
-from configparser import ConfigParser
-from configparser import NoOptionError
-from configparser import NoSectionError
+from ConfigParser import ConfigParser
+from ConfigParser import NoOptionError
+from ConfigParser import NoSectionError
 
 from log import logger as log
 
@@ -17,9 +17,8 @@ from log import logger as log
 class Shell(object):
 
     TI_SERVER_SECTION = "TiServer"
-    TI_CONFIG = os.path.join(
-        os.path.abspath(__file__).rsplit("/")[0].rsplit("/")[0].rsplit("/")[0],
-        "config", "ti_server.ini"
+    TI_CONFIG = os.path.join(os.path.dirname(os.path.dirname(
+        os.path.dirname(__file__))), "config", "ti_server.ini"
     )
 
     def __init__(self):
@@ -35,9 +34,9 @@ class Shell(object):
     def get_parser(self, prog, command):
 
         parser = argparse.ArgumentParser(
-            prog=prog, description=__doc__.strip(), add_help=False,
-            epilog="See '%s help command' for help on a specific "
-                   "command." % prog,
+            prog=prog, add_help=False,
+            epilog="See '%s help command' for help "
+                   "on a specific command." % prog,
         )
         parser.add_argument("-h", "--help", action="help",
                             help=argparse.SUPPRESS)
@@ -66,7 +65,7 @@ class Shell(object):
             )
             self.subcommands[command] = subparsers
             for arg in arguments:
-                if callback(arg):
+                if callable(arg):
                     arg(sub_parser)
                 else:
                     sub_parser.add_argument(*arg[0], **arg[1])
@@ -102,22 +101,28 @@ class Shell(object):
             self.do_help(args)
             return 0
 
-        proxy_file, class_name = class_name.rsplit(".", 1)
-        proxy_module = __import__(proxy_file)
-        proxy = getattr(proxy_module, class_name)(self.ti_server_url)
-
+        sys.path.append(os.path.split(os.path.split(
+            os.path.realpath(__file__))[0])[0])
+        module_name, class_name = class_name.rsplit('.', 1)
+        __import__(module_name)
+        module_meta = sys.modules[module_name]
+        print("ti_server_url: %s" % self.ti_server_url)
+        proxy = getattr(module_meta, class_name)(self.ti_server_url)
+        print(proxy.ti_server_rest)
         try:
-            args.fun(proxy, args)
+            args.func(proxy, args)
         except Exception as e:
             log.error("execute cmd: %s failed. error: %s, trace: %s" % (
-                "%s %s" % (prog, args.fun.__name__), e, traceback.format_exc()
+                "%s %s" % (prog, args.func.__name__), e, traceback.format_exc()
             ))
             print("execute cmd: %s failed. error: %s, trace: %s" % (
-                "%s %s" % (prog, args.fun.__name__), e, traceback.format_exc()
+                "%s %s" % (prog, args.func.__name__), e, traceback.format_exc()
             ))
 
     def __load_config(self, config):
         if not os.path.exists(config):
+            log.error("ti server configuration file not exist. "
+                      "path: %s" % config)
             raise Exception("ti server configuration file not exist. "
                             "path: %s" % config)
         log.info("ti-server config path: %s" % config)
@@ -127,24 +132,32 @@ class Shell(object):
             log.error("there is not ti server configuration in config "
                       "file: %s" % config)
             raise NoSectionError(self.TI_SERVER_SECTION)
+        print(ti_config.options(self.TI_SERVER_SECTION))
+        print()
         for option in self.ti_server_info:
             if not ti_config.has_option(self.TI_SERVER_SECTION, option):
                 log.error("there is not ti server %s in config "
                           "file: %s" % (option, config))
                 raise NoOptionError(option, self.TI_SERVER_SECTION)
+            print(ti_config.get(self.TI_SERVER_SECTION, option))
             self.ti_server_info[option] = \
                 ti_config.get(self.TI_SERVER_SECTION, option)
-        self.ti_server_url = "http://%s:%s" % (
-            self.ti_server_info["host"], self.ti_server_info["port"]
-        )
+        self.ti_server_url = "http://127.0.0.1:8020"
 
 
 def main(prog, class_name, command):
     try:
-        workspace_index = sys.argv.index("--workspace")
-        workspace_path = sys.argv[workspace_index]
-        log.init(os.path.join(workspace_path, "test.log"))
+        workspace_path = ""
+        try:
+            workspace_index = sys.argv.index("--workspace")
+            workspace_path = sys.argv[workspace_index + 1]
+        except ValueError as e:
+            log.error("not an ti run command. workspace set as: %s, error: "
+                      "%s" % (workspace_path, e))
+        log_path = os.path.join("/root/", workspace_path, "test")
+        log.init(log_path)
         sys.exit(Shell().main(sys.argv[1:], prog, class_name, command))
     except Exception as e:
-        print("error occurred when execute cmd, error: %s" % e)
+        print("error occurred when execute cmd, error: %s, trace: %s" %
+              (e, traceback.format_exc()))
         exit(1)

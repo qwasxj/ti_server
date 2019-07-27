@@ -1,6 +1,6 @@
 [
     {
-        "provider": "url_request.auto_test_request.FiAutoTest",
+        "provider": "ti_server.url_request.auto_test_request.FiAutoTest",
         "uris": [
             {
                 "uri": "^/ti/v1/auto_test$",

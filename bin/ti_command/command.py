@@ -11,7 +11,7 @@ RIGHT_RESPONSE_CODE = [200 + code for code in range(100)]
 
 @utils.arg("--workspace", metavar="<workspace>", required=True,
            help="specify user workspace to store log or config")
-@utils.arg("--regex", metavar="<match string>", require=True,
+@utils.arg("--regex", metavar="<match string>", required=True,
            help="match sting to specify test instance position")
 def do_run(proxy, args):
     log.info("start request to ti-server to execute test instance. workspace"

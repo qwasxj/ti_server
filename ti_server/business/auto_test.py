@@ -35,17 +35,18 @@ class AutoTest(object):
         __builtin__.__dict__["global_resource"] = dict()
         global_resource = __builtin__.__dict__["global_resource"]
         global_resource["TiDB"] = TiDBService().ti_db
-
         # set user workspace env
         log.init(os.path.join(workspace, "test.log"))
 
     @staticmethod
     def run_test(match_string):
+        # log.info("start to run tiDB test instance %s" % match_string)
         pass
 
 
 if __name__ == "__main__":
-    arg = sys.argv[1]
+    arg = json.loads(binascii.unhexlify((sys.argv[1])))
+    log.info("xxxxxxxxxxxxxxxxxxxxxxx: %s" % arg)
     AutoTest.env_set(arg.get("workspace"))
     AutoTest.run_test(arg.get("match_string"))
 

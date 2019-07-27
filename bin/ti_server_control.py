@@ -7,10 +7,10 @@ import os
 import subprocess
 import traceback
 
-from configparser import ConfigParser
-from configparser import NoOptionError
-from configparser import NoSectionError
-from ti_server.log import logger as log
+from ConfigParser import ConfigParser
+from ConfigParser import NoOptionError
+from ConfigParser import NoSectionError
+from ti_command.log import logger as log
 
 
 class TiServerControl(object):
@@ -188,7 +188,7 @@ def init_options():
 if __name__ == "__main__":
     log.init("ti_server_control")
 
-    ti_server = "ti_server.py"
+    ti_server = "ti_server_process.py"
     ti_server_root = TiServerControl.TI_SERVER_ROOT
     log.info("ti_server_root: %s, ti_server: %s" % (ti_server_root, ti_server))
 

@@ -2,13 +2,15 @@
 # -*-- coding: utf-8 -*-
 
 import argparse
+import os
 import sys
 import time
 import traceback
 
-from common.log import logger as log
-from common.path_constant import PathConstant
-from ti_rest_server import TiRestServer
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from ti_server.common.log import logger as log  # noqa
+from ti_server.ti_rest_server import TiRestServer  # noqa
 
 
 class TiServer(object):
@@ -51,7 +53,6 @@ def init_options():
 
 if __name__ == "__main__":
     log.init("ti-server")
-    sys.path.append(PathConstant.TI_SERVER_ROOT)
     try:
         TiServer().run()
     except Exception as e:
