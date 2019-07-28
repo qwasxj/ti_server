@@ -22,7 +22,7 @@ ti-serverControl 脚本执行 (在项目 bin 路径下运行即可)
 
 使用 ti-server 测试 TiDB 数据库测试用例示例
 
-    * ti run --workspace workspace_name --regex test_match_string
+    * ti run --workspace workspace_path --regex test_match_string
     
     * run, 运行 TiDB 测试用例的; 现阶段仅有 run 命令
     * --workspace 测试用例工作区间（后续可以对接各个 TiDB 测试插件）

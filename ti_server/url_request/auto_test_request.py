@@ -26,10 +26,6 @@ class FiAutoTest(object):
                 request_body = json.loads(req.body)
                 workspace = request_body["workspace"]
                 match_string = request_body["match_string"]
-                if not match_string:
-                    raise Exception("has not specified tiDB test match string.")
-                if not workspace:
-                    raise Exception("has not specified tiDB workspace.")
             except Exception as e:
                 message = "%s request body invalid. body: %s" % \
                           (self.FAIL, req.body)

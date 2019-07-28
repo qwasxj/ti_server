@@ -106,7 +106,9 @@ class Shell(object):
         module_name, class_name = class_name.rsplit('.', 1)
         __import__(module_name)
         module_meta = sys.modules[module_name]
+        print("ti_server_url: %s" % self.ti_server_url)
         proxy = getattr(module_meta, class_name)(self.ti_server_url)
+        print(proxy.ti_server_rest)
         try:
             args.func(proxy, args)
         except Exception as e:
@@ -140,9 +142,7 @@ class Shell(object):
             print(ti_config.get(self.TI_SERVER_SECTION, option))
             self.ti_server_info[option] = \
                 ti_config.get(self.TI_SERVER_SECTION, option)
-        self.ti_server_url = "http://%s:%s" % (
-            self.ti_server_info["host"], self.ti_server_info["port"]
-        )
+        self.ti_server_url = "http://127.0.0.1:8020"
 
 
 def main(prog, class_name, command):
