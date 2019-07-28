@@ -57,9 +57,9 @@ class Logger(object):
         self.logger.error("[file:%s][line:%s][method:%s] :%s"
                           % (file_path, line, method, msg))
 
-    def init(self, service):
+    def init(self, service, log_path=PathConstant.TI_SERVER_LOG):
         log_task = service
-        log_path = PathConstant.TI_SERVER_LOG
+        log_path = log_path
 
         if not os.path.exists(log_path):
             os.makedirs(log_path)

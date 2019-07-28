@@ -26,6 +26,10 @@ class FiAutoTest(object):
                 request_body = json.loads(req.body)
                 workspace = request_body["workspace"]
                 match_string = request_body["match_string"]
+                if not match_string:
+                    raise Exception("has not specified tiDB test match string.")
+                if not workspace:
+                    raise Exception("has not specified tiDB workspace.")
             except Exception as e:
                 message = "%s request body invalid. body: %s" % \
                           (self.FAIL, req.body)
@@ -41,7 +45,6 @@ class FiAutoTest(object):
                 return HttpConstant.CODE500, {"code": 500, "message": message}
             message = "start to run tiDB auto test instance: %s, log " \
                       "dir path: %s" % (match_string, workspace)
-            log.info(message)
             return HttpConstant.CODE200, {"code": 200, "message": message}
         else:
             message = "Request to run tempest failed with api not supported"

@@ -32,9 +32,7 @@ class BaseFun(object):
     @staticmethod
     def exe_cmd_demon(cmd):
         subprocess.Popen(
-            args=cmd, shell=True, stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE, cwd=PathConstant.SUBPROCESS_ROOT,
-            preexec_fn=BaseFun.__pre_func, close_fds=True
+            args=cmd, shell=True
         )
 
     @staticmethod

@@ -1,15 +1,23 @@
 #! /usr/bin/env python
 # -*-- coding: utf-8 -*-
 
-import __builtin__
 import binascii
 import json
 import os
 import sys
+import time
+import traceback
 
-from ti_server.common.log import logger as log
-from ti_server.common.ti_base_func import BaseFun
-from ti_server.service_api.ti_db_api import TiDBService
+# add ti_server_path to sys path of subprocess
+ti_server_path = os.path.dirname(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+)
+if ti_server_path not in sys.path:
+    sys.path.append(ti_server_path)
+
+from ti_server.common.log import logger as log  # noqa
+from ti_server.common.ti_base_func import BaseFun  # noqa
+from ti_server.ti_db_tests.test_bank_transfer import TestBankTransfer  # noqa
 
 
 class AutoTest(object):
@@ -26,27 +34,90 @@ class AutoTest(object):
         log.info("begin to run ti test.. argument: %s" % args)
         args = binascii.hexlify(json.dumps(args))
         self_call_cmd = "python %s %s" % (__file__, args)
+        log.info("cmd: %s" % self_call_cmd)
         BaseFun.exe_cmd_demon(self_call_cmd)
 
     @staticmethod
-    def env_set(workspace):
+    def start_cluster():
+        """启动 tiDB 集群之前确保已经完成了前面的安装
+
+        :return: None
+        """
+
+        start_cmd = "helm install pingcap/tidb-cluster --name demo --set " \
+                    "schedulerName=default-scheduler,pd.storageClassName=" \
+                    "standard,tikv.storageClassName=standard,pd.replicas=1" \
+                    ",tikv.replicas=1,tidb.replicas=1 --version=${chartVer" \
+                    "sion} "
+
+        code, output = BaseFun.exe_cmd(start_cmd)
+        if code:
+            log.info("execute cmd: %s to start tiDB cluster failed. code: "
+                     "%s, error: %s" % (start_cmd, code, output[-1]))
+            raise Exception(
+                "execute cmd: %s to start tiDB cluster failed. code: %s, "
+                "error: %s" % (start_cmd, code, output[-1])
+            )
+
+    @staticmethod
+    def is_cluster_started(watch_time=60):
+        watch_cmd = "kubectl get svc --watch"
+        while watch_time:
+            code, output = BaseFun.exe_cmd(watch_cmd)
+            if code:
+                log.error(
+                    "error occurred when detect whether cluster can connect "
+                    "or not, code: %s, error: %s" % (code, output[-1])
+                )
+                raise Exception("error occurred when detect whether cluster "
+                                "can connect or not")
+            if "demo-tidb" in output[0]:
+                return True
+            watch_time -= 1
+            time.sleep(1)
+        return False
+
+    @staticmethod
+    def proxy():
+        proxy_cmd = "kubectl port-forward svc/demo-tidb 4000:4000"
+        code, output = BaseFun.exe_cmd(proxy_cmd)
+        if code:
+            log.error(
+                "error occurred when redirect local request to cluster "
+                "code: %s, error: %s" % (code, output[-1])
+            )
+            raise Exception("error occurred when redirect local request to clu"
+                            "ster code: %s, error: %s" % (code, output[-1]))
+
+    @staticmethod
+    def env_set(workspace, match_string):
 
         # set TiDB request object to global variable
-        __builtin__.__dict__["global_resource"] = dict()
-        global_resource = __builtin__.__dict__["global_resource"]
-        global_resource["TiDB"] = TiDBService().ti_db
-        # set user workspace env
-        log.init(os.path.join(workspace, "test.log"))
+        log.init("test", workspace)
+        log.info("set env, workspace: %s, match_string: %s" % (
+            workspace, match_string
+        ))
+        # start tiDB cluster
+        AutoTest.start_cluster()
+        watch_time = 60
+        if not AutoTest.is_cluster_started(watch_time):
+            raise Exception("tiDB cluster has not started successfully after "
+                            "%s s" % watch_time)
+        AutoTest.proxy()
 
     @staticmethod
     def run_test(match_string):
         # log.info("start to run tiDB test instance %s" % match_string)
-        pass
+        TestBankTransfer().test_bank_transfer()
 
 
 if __name__ == "__main__":
     arg = json.loads(binascii.unhexlify((sys.argv[1])))
-    log.info("xxxxxxxxxxxxxxxxxxxxxxx: %s" % arg)
-    AutoTest.env_set(arg.get("workspace"))
-    AutoTest.run_test(arg.get("match_string"))
-
+    log.init("ti-server")
+    try:
+        AutoTest.env_set(arg.get("workspace"), arg.get("match_string"))
+        AutoTest.run_test(arg.get("match_string"))
+    except Exception as e:
+        log.error("execute tiDB test %s failed. error: %s trace: %s" % (
+            arg["match_string"], e, traceback.format_exc()
+        ))

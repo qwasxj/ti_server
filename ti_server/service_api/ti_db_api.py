@@ -18,7 +18,7 @@ class TiDBService(object):
         self.ti_db_options = {
             "host": "",
             "port": "",
-            "username": "",
+            "user": "",
             "password": "",
             "database": ""
         }
@@ -26,7 +26,7 @@ class TiDBService(object):
         self.ti_db = pymysql.connect(
             host=self.ti_db_options["host"],
             port=self.ti_db_options["port"],
-            user=self.ti_db_options["username"],
+            user=self.ti_db_options["user"],
             password=self.ti_db_options["password"],
             database=self.ti_db_options["database"]
         )

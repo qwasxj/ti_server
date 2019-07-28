@@ -13,9 +13,9 @@ import traceback
 from eventlet import wsgi
 from eventlet.green import socket
 from eventlet.wsgi import HttpProtocol
-from rest_parser import RestReqApp
 from SocketServer import BaseRequestHandler
 from ti_server.common.log import logger as log
+from ti_server.rest_parser import RestReqApp
 from webob import Response
 
 
@@ -28,7 +28,7 @@ class TiRestServer(threading.Thread):
         self.app = RestReqApp()
 
     def run(self):
-        log.info("rest host: %s, port: %s" % (self.host, self.port))
+        log.info("ti-server running at http://%s:%s" % (self.host, self.port))
         while True:
             try:
                 HTTPServer(
