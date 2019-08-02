@@ -23,7 +23,7 @@ class FiAutoTest(object):
         if action == "POST":
             # request body invalid
             try:
-                request_body = json.loads(req.body)
+                request_body = json.loads(req.body.decode("utf-8"))
                 workspace = request_body["workspace"]
                 match_string = request_body["match_string"]
                 if not match_string:
