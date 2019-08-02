@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*-- coding: utf-8 -*-
 
-from .ti_server_rest import TiServerRest
+from bin.ti_command.ti_server_rest import TiServerRest
 
 
 class Proxy(object):

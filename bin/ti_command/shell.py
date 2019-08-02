@@ -10,8 +10,8 @@ from configparser import ConfigParser
 from configparser import NoOptionError
 from configparser import NoSectionError
 
-from . import utils
-from .log import logger as log
+from bin.ti_command import utils
+from bin.ti_command.log import logger as log
 
 
 class Shell(object):
@@ -54,11 +54,11 @@ class Shell(object):
             command = attr[3:].replace("_", "-")
             callback = getattr(actions_mod, attr)
             desc = callback.__doc__ or ""
-            help = desc.strip().split("\n")[0]
+            help_ = desc.strip().split("\n")[0]
             arguments = getattr(callback, "arguments", [])
 
             sub_parser = subparsers.add_parser(
-                command, help=help, description=desc, add_help=False
+                command, help=help_, description=desc, add_help=False
             )
             sub_parser.add_argument(
                 "-h", "--help", action="help", help=argparse.SUPPRESS

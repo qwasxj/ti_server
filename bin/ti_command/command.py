@@ -2,8 +2,8 @@
 # -*-- coding: utf-8 -*-
 
 
-from . import utils
-from .log import logger as log
+from bin.ti_command import utils
+from bin.ti_command.log import logger as log
 
 RIGHT_RESPONSE_CODE = [200 + code for code in range(100)]
 
