@@ -12,7 +12,7 @@ from configparser import ConfigParser
 from configparser import NoOptionError
 from configparser import NoSectionError
 
-sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from bin.ti_command.log import logger as log  # noqa
 
