@@ -8,7 +8,8 @@
 ###命令：
 ti-serverControl 脚本执行 (在项目 bin 路径下运行即可)
 
-    * python ti_server_control.py control -a start -c /root/ti_server/config/ti_server.ini
+    * python3 ti_server_control.py control -a start -c 
+    /root/ti_server/config/ti_server.ini
     
     后续： 
     * tidb  -a start -c /root/ti_server/config/ti_server.ini
@@ -21,7 +22,8 @@ ti-serverControl 脚本执行 (在项目 bin 路径下运行即可)
 
 使用 ti-server 测试 TiDB 数据库测试用例示例
 
-    python ti.py run --workspace /root/tiDB --regex ti_test_plugin.bank_transfer
+    python3 ti.py run --workspace /root/tiDB --regex ti_test_plugin
+    .bank_transfer
 
     最终：
     * ti run --workspace workspace_path --regex test_match_string
