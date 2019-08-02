@@ -4,13 +4,17 @@
 import argparse
 import fcntl
 import os
+import sys
 import subprocess
 import traceback
 
 from configparser import ConfigParser
 from configparser import NoOptionError
 from configparser import NoSectionError
-from bin.ti_command.log import logger as log
+
+sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+
+from bin.ti_command.log import logger as log  # noqa
 
 
 class TiServerControl(object):
