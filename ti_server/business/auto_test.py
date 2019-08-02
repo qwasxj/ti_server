@@ -32,7 +32,7 @@ class AutoTest(object):
             "match_string": match_string
         }
         log.info("begin to run ti test.. argument: %s" % args)
-        args = binascii.hexlify(json.dumps(args))
+        args = binascii.hexlify(json.dumps(args).encode("utf-8"))
         self_call_cmd = "python3 %s %s" % (__file__, args)
         log.info("cmd: %s" % self_call_cmd)
         BaseFun.exe_cmd_demon(self_call_cmd)
@@ -98,7 +98,7 @@ class AutoTest(object):
 
 
 if __name__ == "__main__":
-    arg = json.loads(binascii.unhexlify((sys.argv[1])))
+    arg = json.loads(binascii.unhexlify((sys.argv[1])).decode("utf-8"))
     log.init("ti-server")
     try:
         AutoTest.env_set(arg.get("workspace"), arg.get("match_string"))
