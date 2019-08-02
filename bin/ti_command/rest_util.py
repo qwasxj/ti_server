@@ -132,7 +132,8 @@ class RestSender(object):
             if req_param["headers"]["Content-Type"] == "application/gzip":
                 req_param["data"] = kwargs["body"]
             else:
-                req_param["data"] = json.dumps(kwargs["body"])
+                req_param["data"] = \
+                    json.dumps(kwargs["body"]).encode(encoding='UTF8')
         # build urllib2 Request object
         req = urllib2.Request(**req_param)
         self._set_method(req, method)
@@ -208,7 +209,8 @@ class RestSender(object):
             if req_param["headers"]["Content-Type"] == "application/gzip":
                 req_param["data"] = kwargs["body"]
             else:
-                req_param["data"] = json.dumps(kwargs["body"])
+                req_param["data"] = \
+                    json.dumps(kwargs["body"]).encode(encoding='UTF8')
         # build urllib2 Request object
         req = urllib2.Request(**req_param)
         self._set_method(req, method)
