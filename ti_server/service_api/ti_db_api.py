@@ -16,18 +16,17 @@ class TiDBService(object):
 
     def __init__(self):
         self.ti_db_options = {
-            "host": "",
-            "port": "",
-            "user": "",
-            "password": "",
-            "database": ""
+            "host": "127.0.0.1",
+            "port": 4000,
+            "user": "root",
+            "password": "xj",
+            "database": "test"
         }
         self.get_db_config()
         self.ti_db = pymysql.connect(
             host=self.ti_db_options["host"],
-            port=self.ti_db_options["port"],
+            port=int(self.ti_db_options["port"]),
             user=self.ti_db_options["user"],
-            password=self.ti_db_options["password"],
             database=self.ti_db_options["database"]
         )
 

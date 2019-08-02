@@ -1,8 +1,6 @@
 #! /usr/bin/env python
 # -*-- coding: utf-8 -*-
 
-import binascii
-import json
 import os
 import sys
 import time
@@ -17,6 +15,7 @@ if ti_server_path not in sys.path:
 
 from ti_server.common.log import logger as log  # noqa
 from ti_server.common.ti_base_func import BaseFun  # noqa
+from ti_server.service_api.ti_db_api import TiDBService  # noqa
 from ti_server.ti_db_tests.test_bank_transfer import TestBankTransfer  # noqa
 
 
@@ -27,13 +26,9 @@ class AutoTest(object):
 
     @staticmethod
     def ti_test_run(workspace, match_string):
-        args = {
-            "workspace": workspace,
-            "match_string": match_string
-        }
-        log.info("begin to run ti test.. argument: %s" % args)
-        args = binascii.hexlify(json.dumps(args).encode("utf-8"))
-        self_call_cmd = "python3 %s %s" % (__file__, args)
+        log.info("begin to run ti test.. workspace: %s, match_string: %s" %
+                 (workspace, match_string))
+        self_call_cmd = "python3 %s %s %s" % (__file__, workspace, match_string)
         log.info("cmd: %s" % self_call_cmd)
         BaseFun.exe_cmd_demon(self_call_cmd)
 
@@ -69,10 +64,12 @@ class AutoTest(object):
                 )
                 raise Exception("error occurred when detect whether cluster "
                                 "can connect or not")
-            if "docker-proxy" in output[0]:
+            if "docker-proxy" in str(output[0]):
+                log.info("tiDB cluster has been started...")
                 return True
             watch_time -= 1
             time.sleep(1)
+        log.info("tiDB cluster has not been started")
         return False
 
     @staticmethod
@@ -93,17 +90,29 @@ class AutoTest(object):
 
     @staticmethod
     def run_test(match_string):
+        ti_db = TiDBService().ti_db
+        log.info("get tiDB instance %s" % ti_db)
         log.info("start to run tiDB test instance %s" % match_string)
-        TestBankTransfer().test_bank_transfer()
-
+        try:
+            test = TestBankTransfer(ti_db, log)
+            test.setUp()
+            test.test_bank_transfer()
+            test.tearDown()
+        except Exception as test_e:
+            log.info("execute test %s failed. error: %s, trace: %s" % (
+                match_string, test_e, traceback.format_exc()
+            ))
+        finally:
+            ti_db.cursor().close()
+            ti_db.close()
+        
 
 if __name__ == "__main__":
-    arg = json.loads(binascii.unhexlify((sys.argv[1])).decode("utf-8"))
     log.init("ti-server")
     try:
-        AutoTest.env_set(arg.get("workspace"), arg.get("match_string"))
-        AutoTest.run_test(arg.get("match_string"))
+        AutoTest.env_set(sys.argv[1], sys.argv[2])
+        AutoTest.run_test(sys.argv[2])
     except Exception as e:
         log.error("execute tiDB test %s failed. error: %s trace: %s" % (
-            arg["match_string"], e, traceback.format_exc()
+            sys.argv[2], e, traceback.format_exc()
         ))

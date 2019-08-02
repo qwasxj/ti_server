@@ -89,7 +89,7 @@ class RestReqApp(object):
             status, body = self.ex_func(obj, method, environ)
             log.info("the http status: %s" % status)
 
-            res.body = json.dumps(body)
+            res.body = json.dumps(body).encode("utf-8")
             res.status = status
         except Exception as e:
             res.status = "500"
