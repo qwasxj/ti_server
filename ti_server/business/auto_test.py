@@ -33,7 +33,7 @@ class AutoTest(object):
         }
         log.info("begin to run ti test.. argument: %s" % args)
         args = binascii.hexlify(json.dumps(args))
-        self_call_cmd = "python %s %s" % (__file__, args)
+        self_call_cmd = "python3 %s %s" % (__file__, args)
         log.info("cmd: %s" % self_call_cmd)
         BaseFun.exe_cmd_demon(self_call_cmd)
 

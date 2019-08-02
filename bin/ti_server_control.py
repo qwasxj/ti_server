@@ -62,7 +62,7 @@ class TiServerControl(object):
             if is_run:
                 log.info("ti server is run, exist ti_server_control")
             else:
-                start_cmd = "python %s" % self.ti_server_path
+                start_cmd = "python3 %s" % self.ti_server_path
                 for arg, value in self.ti_server_info.items():
                     start_cmd = "%s -%s %s" % (start_cmd, arg, value)
                 log.info("run ti-server start cmd: %s" % start_cmd)
