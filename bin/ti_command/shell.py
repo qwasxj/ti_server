@@ -5,13 +5,13 @@ import argparse
 import os
 import sys
 import traceback
-import utils
 
 from configparser import ConfigParser
 from configparser import NoOptionError
 from configparser import NoSectionError
 
-from log import logger as log
+from . import utils
+from .log import logger as log
 
 
 class Shell(object):

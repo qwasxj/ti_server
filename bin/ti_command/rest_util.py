@@ -8,7 +8,7 @@ import time
 import traceback
 import urllib.request as urllib2
 
-from log import logger as log
+from .log import logger as log
 
 RIGHT_RESPONSE_CODE = [200 + code for code in range(100)]
 

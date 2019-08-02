@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*-- coding: utf-8 -*-
 
-from rest_util import RestSender
+from .rest_util import RestSender
 
 
 class TiServerRest(object):

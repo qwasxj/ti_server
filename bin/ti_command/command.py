@@ -2,9 +2,8 @@
 # -*-- coding: utf-8 -*-
 
 
-import utils
-
-from log import logger as log
+from . import utils
+from .log import logger as log
 
 RIGHT_RESPONSE_CODE = [200 + code for code in range(100)]
 
