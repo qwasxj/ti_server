@@ -7,9 +7,9 @@ import sys
 import traceback
 import utils
 
-from ConfigParser import ConfigParser
-from ConfigParser import NoOptionError
-from ConfigParser import NoSectionError
+from configparser import ConfigParser
+from configparser import NoOptionError
+from configparser import NoSectionError
 
 from log import logger as log
 

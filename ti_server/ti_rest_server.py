@@ -7,13 +7,13 @@ import socket as orig_socket
 import sys
 import time
 import threading
-import types
+# import types
 import traceback
 
 from eventlet import wsgi
 from eventlet.green import socket
 from eventlet.wsgi import HttpProtocol
-from SocketServer import BaseRequestHandler
+# from SocketServer import BaseRequestHandler
 from ti_server.common.log import logger as log
 from ti_server.rest_parser import RestReqApp
 from webob import Response
@@ -101,21 +101,21 @@ class HTTPServer(object):
                                    socket_class.TCP_KEEPINTVL, 15)
 
             srv = wsgi.server if not self.threaded else thread_server
-            if (isinstance(self.app, types.InstanceType) and not isinstance(
-                    self.app, BaseRequestHandler)) \
-                    or isinstance(self.app, types.FunctionType):
-                srv(_socket, self.app, protocol=HttpProtocol, log=self.log,
-                    socket_timeout=self.socket_timeout,
-                    need_parallel_func=self.need_parallel_func)
-            elif isinstance(self.app, types.ClassType):
-                srv(_socket, _default_app, protocol=self.app, log=self.log,
-                    socket_timeout=self.socket_timeout,
-                    need_parallel_func=self.need_parallel_func)
-            else:
-                srv(_socket, self.app, protocol=HttpProtocol, log=self.log,
-                    socket_timeout=self.socket_timeout)
-                # raise Exception("rest server only support func call or "
-                #                 "instance of BaseRequestHandler")
+            # if (isinstance(self.app, types.InstanceType) and not isinstance(
+            #         self.app, BaseRequestHandler)) \
+            #         or isinstance(self.app, types.FunctionType):
+            #     srv(_socket, self.app, protocol=HttpProtocol, log=self.log,
+            #         socket_timeout=self.socket_timeout,
+            #         need_parallel_func=self.need_parallel_func)
+            # elif isinstance(self.app, types.ClassType):
+            #     srv(_socket, _default_app, protocol=self.app, log=self.log,
+            #         socket_timeout=self.socket_timeout,
+            #         need_parallel_func=self.need_parallel_func)
+            # else:
+            srv(_socket, self.app, protocol=HttpProtocol, log=self.log,
+                socket_timeout=self.socket_timeout)
+            # raise Exception("rest server only support func call or "
+            #                 "instance of BaseRequestHandler")
         except Exception as e:
             log.error("HTTPServer start error: %s, trace; %s" %
                       (e, traceback.format_exc()))

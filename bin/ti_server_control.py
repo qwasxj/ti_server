@@ -7,9 +7,9 @@ import os
 import subprocess
 import traceback
 
-from ConfigParser import ConfigParser
-from ConfigParser import NoOptionError
-from ConfigParser import NoSectionError
+from configparser import ConfigParser
+from configparser import NoOptionError
+from configparser import NoSectionError
 from ti_command.log import logger as log
 
 

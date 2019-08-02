@@ -8,10 +8,10 @@
 ###命令：
 ti-serverControl 脚本执行 (在项目 bin 路径下运行即可)
 
-    * python ti_server_control.py control -a start -c ~/tidb_auto_test/config/ti_server.ini
+    * python ti_server_control.py control -a start -c /root/ti_server/config/ti_server.ini
     
     后续： 
-    * tidb  -a start -c ~/tidb_auto_test/config/ti_server.ini
+    * tidb  -a start -c /root/ti_server/config/ti_server.ini
     
     最终 ti-server 由脚本控制安装，用户不感知
     

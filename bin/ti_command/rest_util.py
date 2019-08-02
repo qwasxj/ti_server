@@ -6,7 +6,7 @@ import json
 import ssl
 import time
 import traceback
-import urllib2
+import urllib.request as urllib2
 
 from log import logger as log
 

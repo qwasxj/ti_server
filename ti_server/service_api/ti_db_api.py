@@ -6,9 +6,9 @@ import logging as log
 import pymysql
 
 from ti_server.common.path_constant import PathConstant
-from ConfigParser import ConfigParser
-from ConfigParser import NoSectionError
-from ConfigParser import NoOptionError
+from configparser import ConfigParser
+from configparser import NoSectionError
+from configparser import NoOptionError
 
 
 class TiDBService(object):

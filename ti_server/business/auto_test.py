@@ -44,11 +44,7 @@ class AutoTest(object):
         :return: None
         """
 
-        start_cmd = "helm install pingcap/tidb-cluster --name demo --set " \
-                    "schedulerName=default-scheduler,pd.storageClassName=" \
-                    "standard,tikv.storageClassName=standard,pd.replicas=1" \
-                    ",tikv.replicas=1,tidb.replicas=1 --version=${chartVer" \
-                    "sion} "
+        start_cmd = "docker-compose up -d"
 
         code, output = BaseFun.exe_cmd(start_cmd)
         if code:
@@ -61,9 +57,11 @@ class AutoTest(object):
 
     @staticmethod
     def is_cluster_started(watch_time=60):
-        watch_cmd = "kubectl get svc --watch"
+        watch_cmd = "netstat -apn | grep 4000"
         while watch_time:
             code, output = BaseFun.exe_cmd(watch_cmd)
+            log.info("execute cmd: %s. code: %s, output: %s" %
+                     (watch_cmd, code, output))
             if code:
                 log.error(
                     "error occurred when detect whether cluster can connect "
@@ -71,23 +69,11 @@ class AutoTest(object):
                 )
                 raise Exception("error occurred when detect whether cluster "
                                 "can connect or not")
-            if "demo-tidb" in output[0]:
+            if "docker-proxy" in output[0]:
                 return True
             watch_time -= 1
             time.sleep(1)
         return False
-
-    @staticmethod
-    def proxy():
-        proxy_cmd = "kubectl port-forward svc/demo-tidb 4000:4000"
-        code, output = BaseFun.exe_cmd(proxy_cmd)
-        if code:
-            log.error(
-                "error occurred when redirect local request to cluster "
-                "code: %s, error: %s" % (code, output[-1])
-            )
-            raise Exception("error occurred when redirect local request to clu"
-                            "ster code: %s, error: %s" % (code, output[-1]))
 
     @staticmethod
     def env_set(workspace, match_string):
@@ -97,17 +83,17 @@ class AutoTest(object):
         log.info("set env, workspace: %s, match_string: %s" % (
             workspace, match_string
         ))
-        # start tiDB cluster
-        AutoTest.start_cluster()
+        # start tiDB cluster when TiDB cluster is not started
+        if not AutoTest.is_cluster_started(1):
+            AutoTest.start_cluster()
         watch_time = 60
         if not AutoTest.is_cluster_started(watch_time):
             raise Exception("tiDB cluster has not started successfully after "
                             "%s s" % watch_time)
-        AutoTest.proxy()
 
     @staticmethod
     def run_test(match_string):
-        # log.info("start to run tiDB test instance %s" % match_string)
+        log.info("start to run tiDB test instance %s" % match_string)
         TestBankTransfer().test_bank_transfer()
 
 
