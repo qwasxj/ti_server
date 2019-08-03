@@ -20,6 +20,8 @@ from ti_server.ti_db_tests.test_bank_transfer import TestBankTransfer  # noqa
 
 
 class AutoTest(object):
+    
+    TI_DB = "pingcap/tidb:latest"
 
     def __init__(self):
         pass
@@ -52,24 +54,35 @@ class AutoTest(object):
 
     @staticmethod
     def is_cluster_started(watch_time=60):
-        watch_cmd = "netstat -apn | grep 4000"
         while watch_time:
-            code, output = BaseFun.exe_cmd(watch_cmd)
-            log.info("execute cmd: %s. code: %s, output: %s" %
-                     (watch_cmd, code, output))
-            if code:
-                log.error(
-                    "error occurred when detect whether cluster can connect "
-                    "or not, code: %s, error: %s" % (code, output[-1])
-                )
-                raise Exception("error occurred when detect whether cluster "
-                                "can connect or not")
-            if "docker-proxy" in str(output[0]):
+            if not AutoTest.__cluster_detect():
+                log.info("tiDB cluster has not started. left detect "
+                         "time: %s" % watch_time)
+            else:
                 log.info("tiDB cluster has been started...")
                 return True
             watch_time -= 1
             time.sleep(1)
         log.info("tiDB cluster has not been started")
+        return False
+    
+    @staticmethod
+    def __cluster_detect():
+        ps_cmd = "docker ps"
+        code, output = BaseFun.exe_cmd(ps_cmd)
+        if code:
+            log.info(
+                "execute cmd: %s to detect tiDB cluster started failed. code: "
+                "%s, error: %s" % (ps_cmd, code, output[1])
+            )
+            raise Exception(
+                "execute cmd: %s to detect tiDB cluster started failed. code: "
+                "%s, error: %s" % (ps_cmd, code, output[1])
+            )
+        container_ifs = output[0].decode("utf-8").split("\n")
+        for container_info in container_ifs:
+            if AutoTest.TI_DB in container_info:
+                return True
         return False
 
     @staticmethod

@@ -63,7 +63,6 @@ class TestBankTransfer(unittest.TestCase):
                 "execute cmd: %s to get pd docker id failed. code: %s, error: "
                 "%s" % (ps_cmd, code, output[1])
             )
-        self.log.info("output[0]: %s type: %s" % (output[0], type(output[0])))
         container_ifs = output[0].decode("utf-8").split("\n")
         for container_info in container_ifs:
             if self.PD_STRING in container_info:
