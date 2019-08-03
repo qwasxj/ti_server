@@ -87,6 +87,8 @@ class AutoTest(object):
 
     @staticmethod
     def env_set(workspace, match_string):
+        
+        start = False
 
         # set TiDB request object to global variable
         log.init("test", workspace)
@@ -95,12 +97,14 @@ class AutoTest(object):
         ))
         # start tiDB cluster when TiDB cluster is not started
         if not AutoTest.is_cluster_started(1):
+            start = True
             AutoTest.start_cluster()
         watch_time = 60
         if not AutoTest.is_cluster_started(watch_time):
             raise Exception("tiDB cluster has not started successfully after "
                             "%s s" % watch_time)
-        time.sleep(3)
+        if start:
+            time.sleep(30)
 
     @staticmethod
     def run_test(match_string):
