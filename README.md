@@ -5,7 +5,7 @@
     
 ## Illustration
 
-###命令：
+### 命令：
 ti-serverControl 脚本执行 (在项目 bin 路径下运行即可)
 
     * python3 ti_server_control.py control -a start -c 
