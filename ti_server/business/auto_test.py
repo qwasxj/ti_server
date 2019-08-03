@@ -100,6 +100,7 @@ class AutoTest(object):
         if not AutoTest.is_cluster_started(watch_time):
             raise Exception("tiDB cluster has not started successfully after "
                             "%s s" % watch_time)
+        time.sleep(3)
 
     @staticmethod
     def run_test(match_string):
