@@ -32,7 +32,7 @@ ti-serverControl 脚本执行 (在项目 bin 路径下运行即可)
     * --workspace 测试用例工作区间（后续可以对接各个 TiDB 测试插件）
     * --regex 指定 TiDB 测试路径匹配字符串
 
-###日志路径说明
+### 日志路径说明
 ti-server 测试框架日志路径: /var/log/ti_server, 其下面有：
     ti-serverControl 控制脚本日志
     ti-server TiDB 测试框架日志
