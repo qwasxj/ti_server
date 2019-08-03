@@ -41,7 +41,7 @@ class AutoTest(object):
         :return: None
         """
 
-        start_cmd = "docker-compose up -d"
+        start_cmd = "cd /root/tidb-docker-compose/;docker-compose up -d"
 
         code, output = BaseFun.exe_cmd(start_cmd)
         if code:
