@@ -94,7 +94,7 @@ class AutoTest(object):
         log.info("get tiDB instance %s" % ti_db)
         log.info("start to run tiDB test instance %s" % match_string)
         try:
-            test = TestBankTransfer(ti_db, log)
+            test = TestBankTransfer(ti_db, log, BaseFun)
             test.setUp()
             test.test_bank_transfer()
             test.tearDown()
